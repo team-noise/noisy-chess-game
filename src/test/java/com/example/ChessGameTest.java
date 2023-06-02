@@ -7,23 +7,21 @@ import junit.framework.TestSuite;
 /**
  * Unit test for simple App.
  */
-public class AppTest 
-    extends TestCase
-{
+public class ChessGameTest extends TestCase {
     /**
      * Create the test case
      *
      * @param testName name of the test case
      */
     public ChessGameTest(String testName) {
-        super( testName );
+        super(testName);
     }
 
     /**
      * @return the suite of tests being tested
      */
     public static Test suite() {
-        return new TestSuite(AppTest.class);
+        return new TestSuite(ChessGameTest.class);
     }
 
     /**
