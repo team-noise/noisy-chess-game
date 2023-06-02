@@ -2,6 +2,6 @@
 core program of original chess game
 
 # contributors
-@noritaka-kagei, 
+@noritaka-kagei, @taekfujiacom
 
 # 
