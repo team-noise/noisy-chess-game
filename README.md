@@ -1,5 +1,5 @@
 # noisy-chess-game
-core program of original chess game
+Team NOISEでオリジナルのチェスゲームを作成するためのリポジトリ   
 
 # contributors
 @noritaka-kagei, @taekfujiacom
