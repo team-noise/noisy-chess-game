@@ -23,4 +23,4 @@ java -jar <artifact>.jar
 
 
 ### contributors
-@noritaka-kagei, @taekfujiacom
+@noritaka-kagei, @takefujiacom
