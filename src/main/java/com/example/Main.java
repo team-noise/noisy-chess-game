@@ -8,10 +8,10 @@ public class Main {
     public static void main(String[] args) {
         Board board = new Board();
 
-        System.out.println("====Start==== Avobe:WHITE Below:BLACK");
+        System.out.println("====Start==== Above:BLACK Below:WHITE");
         board.printBoard();
 
-        // playing this game
+        // play this game
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -28,21 +28,13 @@ public class Main {
             board.printBoard();
 
             System.out.println("Do you want to continue playing? (y/n)");
-            String choice = scanner.next();
+            String exit = scanner.next();
 
-            if (choice.equalsIgnoreCase("n")) {
+            if (exit.equalsIgnoreCase("n")) {
                 break;
             }
         }
 
         scanner.close();
-    }
-
-    private static Boolean validate(int a, int b, int c, int d) {
-        if ( 0 <= a && a < 8 && 
-            0 <= b && b < 8 &&
-            0 <= c && c < 8 &&
-            0 <= d && d < 8 ) return true;
-        return false;
     }
 }

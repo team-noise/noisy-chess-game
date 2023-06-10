@@ -1,27 +1,41 @@
 package com.example.pieces;
 
-import com.example.common.Potision;
+import com.example.common.Position;
 
 public abstract class Piece {
-    private Potision potision;
+    private Position position;      // position info on chess board
     private final boolean isWhite;
+    private int count;              // the number of moving on chess board
 
-    public Piece(final int row, final int col, final boolean isWhite) {
-        this.potision = new Potision(row, col);
+    protected Piece(final int row, final int col, final boolean isWhite) {
+        this.position = new Position(row, col);
         this.isWhite = isWhite;
+        this.count = 0;
     }
 
     public boolean isWhite() {
         return this.isWhite;
     }
 
-    public Potision gePotision() {
-        return potision;
+    public boolean isBlack() {
+        return !this.isWhite;
     }
 
-    public void setPotision(Potision potision) {
-        this.potision = potision;
+    public Position getPosition() {
+        return position;
     }
 
-    public abstract boolean isValidMove(Potision potision);
+    public int getCount() {
+        return count;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public void addCount() {
+        this.count++;
+    }
+
+    public abstract boolean isValidMove(Position position);
 }

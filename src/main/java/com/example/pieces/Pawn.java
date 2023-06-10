@@ -1,6 +1,6 @@
 package com.example.pieces;
 
-import com.example.common.Potision;
+import com.example.common.Position;
 
 public class Pawn extends Piece {
     // constructor
@@ -8,27 +8,51 @@ public class Pawn extends Piece {
         super(line, row, isWhite);
     }
 
-    public boolean isValidMove(int line, int row) {
-        // condition 1: You can only move forward
-        Boolean moveUp;
-        if ( gePotision().getRow() > line) moveUp = true;
-        else moveUp = false;
-
-        if ( isWhite() && Boolean.TRUE.equals(!moveUp) ) return false;
-        if ( !isWhite() && Boolean.TRUE.equals(moveUp)) return false;
+    @Override
+    public boolean isValidMove(Position position) {
+        // condition 1: forward movement only allowed
+        if ( !moveForward(position) ) return false;
         
-        // condition 2: 移動4パターンに属すかどうか
-        int distanceLine = Math.abs( gePotision().getRow() - line);
-        int distanceRow = Math.abs( gePotision().getCol() - row);
-        if ( 0 < distanceLine && distanceLine <= 2 &&  distanceRow <= 1 ) {return true;
-        }
+        // condition 2: 1 square diagonally movement is allowed
+        if ( moveDiagonally(position) ) return true;
+
+        // condition 3: the following straight movements are allowed
+        //              - 1 square movement (always)
+        //              - 2 square movement on the first time
+        if ( !moveStraight(position) ) return false;
+        int distanceRow = Math.abs( getPosition().getRow() - position.getRow() );
+        if ( distanceRow == 1 ) return true;
+        if ( distanceRow == 2 && getCount() == 0 )return true;
         
         return false;
     }
 
-    @Override
-    public boolean isValidMove(Potision potision) {
-        // todo: implemented
-        return true;
+    public boolean killPiece(Position position) {
+        if ( !moveForward(position) ) return false;
+
+        // Pawn cannot kill enemy pieces by moving straight
+        if ( moveStraight(position) ) return false;
+
+        // Pawn can kill enemy pieces by moving diagonally
+        return moveDiagonally(position);
+    }
+
+    private boolean moveForward(Position position) {
+        boolean moveUp;
+        if ( getPosition().getRow() > position.getRow() ) moveUp = true;
+        else moveUp = false;
+
+        return isWhite() ^ !moveUp;
+    }
+
+    private boolean moveDiagonally(Position position) {
+        int distanceRow = Math.abs( getPosition().getRow() - position.getRow() );
+        int distanceCol = Math.abs( getPosition().getCol() - position.getCol() );
+        return distanceRow == 1 && distanceCol == 1;
+    }
+
+    public boolean moveStraight(Position position) {
+        int distanceCol = Math.abs( getPosition().getCol() - position.getCol() );
+        return distanceCol == 0;
     }
 }

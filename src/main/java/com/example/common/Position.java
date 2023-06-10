@@ -1,10 +1,10 @@
 package com.example.common;
 
-public class Potision {
+public class Position {
     private int row;
     private int col;
 
-    public Potision(int row, int col) {
+    public Position(int row, int col) {
         this.row = row;
         this.col = col;
     }
@@ -25,11 +25,17 @@ public class Potision {
         this.col = col;
     }
 
+    @Override
     public boolean equals(Object obj) {
-        if ( obj instanceof Potision ) {
-            Potision potision = (Potision) obj;
-            if ( row == potision.getRow() && col == potision.getCol() ) return true;
+        if ( obj instanceof Position ) {
+            Position position = (Position) obj;
+            if ( row == position.getRow() && col == position.getCol() ) return true;
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return row*10 + col;
     }
 }
