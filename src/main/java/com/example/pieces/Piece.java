@@ -1,13 +1,13 @@
 package com.example.pieces;
 
+import com.example.common.Potision;
+
 public abstract class Piece {
-    private int line;
-    private int row;
+    private Potision potision;
     private final boolean isWhite;
 
-    public Piece(final int line, final int row, final boolean isWhite) {
-        this.line = line;
-        this.row = row;
+    public Piece(final int row, final int col, final boolean isWhite) {
+        this.potision = new Potision(row, col);
         this.isWhite = isWhite;
     }
 
@@ -15,13 +15,13 @@ public abstract class Piece {
         return this.isWhite;
     }
 
-    public int getLine() {
-        return this.line;
+    public Potision gePotision() {
+        return potision;
     }
 
-    public int getRow() {
-        return this.row;
+    public void setPotision(Potision potision) {
+        this.potision = potision;
     }
 
-    public abstract boolean isValidMove(int line, int row);
+    public abstract boolean isValidMove(Potision potision);
 }

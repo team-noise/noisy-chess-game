@@ -66,6 +66,14 @@ public class ChessGame {
 
     private void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
         char piece = board[fromRow][fromCol];
+
+        switch (piece) {
+            case 'P':
+                break;
+            default: 
+                String msg = "not found piece";
+        }
+
         board[fromRow][fromCol] = EMPTY_CELL;
         board[toRow][toCol] = piece;
     }

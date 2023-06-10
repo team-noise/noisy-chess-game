@@ -2,60 +2,81 @@ package com.example.board;
 
 import java.util.ArrayList;
 
+import com.example.common.Potision;
 import com.example.pieces.*;
 
 
 public class Board {
-    public final int MAX=8;
-    private String[][] square;
+    public static final int BOARD_SIZE = 8;
+    private static final char EMPTY_CELL = '-';
+
+    private char[][] chessBoard;
     private ArrayList<Piece> pieces;
 
     public Board() {
-        this.square = new String[8][8];
-        this.pieces = new ArrayList<Piece>();
+        this.chessBoard = new char[BOARD_SIZE][BOARD_SIZE];
+        this.pieces = new ArrayList<>();
         
         init();
     }
 
     private void init() {
         // fill empty space of board
-        for ( int i=0; i<MAX; i++ ) {
-            for ( int j=0; j<MAX; j++ ) {
-                square[i][j] = "-";
+        for ( int row = 0; row < BOARD_SIZE; row++ ) {
+            for ( int col = 0; col < BOARD_SIZE; col++ ) {
+                chessBoard[row][col] = EMPTY_CELL;
             }
         }
 
-        // place to pawn
-        for ( int i=0; i<MAX; i++ ) {
-            square[1][i] = "P";
-            pieces.add(new Pawn(1, i, false));
-            square[(MAX-1)-1][i] = "P";
-            pieces.add(new Pawn((MAX-1)-1, i, true));
+        // deploy pawn peices
+        for ( int col = 0; col < BOARD_SIZE; col++ ) {
+            chessBoard[1][col] = 'P';
+            pieces.add(new Pawn(1, col, false));
+            chessBoard[(BOARD_SIZE-1)-1][col] = 'P';
+            pieces.add(new Pawn((BOARD_SIZE-1)-1, col, true));
         }
+
+        // deploy king peices
     }
 
-    public void replacePieces(int currentLine, int currentRow, int afterLine, int afterRow) {
-        System.out.println("[DEBUG] "+square[currentLine][currentRow]);
-        square[afterLine][afterRow] = square[currentLine][currentRow];
-        square[currentLine][currentRow] = "-";
+    public void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
+        Piece piece = findPieceObj(fromRow, fromCol);
+        if ( piece == null ) {
+            System.out.println("[ERROR] not found piece");
+            return;
+        }
+
+        boolean canMove = piece.isValidMove(new Potision(toRow, toCol));
+
+        if ( Boolean.TRUE.equals(canMove) ) {
+            char pieceChar = chessBoard[fromRow][fromCol];
+            chessBoard[fromRow][fromCol] = EMPTY_CELL;
+            chessBoard[toRow][toCol] = pieceChar;
+            piece.setPotision(new Potision(toRow, toCol));
+        }
     }
 
     public ArrayList<Piece> getPieces() {
         return pieces;
     }
 
-    public String getSqaure(int i, int j) {
-        return square[i][j];
+    private Piece findPieceObj(int row, int col) {
+        Potision targetPotision = new Potision(row, col);
+
+        for (Piece piece : pieces) {
+            if ( piece.gePotision().equals(targetPotision) ) return piece;
+        }
+
+        return null;
     }
 
-    public void display() {
-        System.out.println("---------------------------------");
-        for ( int i=0; i<MAX; i++ ) {
-            for ( int j=0; j<MAX; j++ ) {
-                System.out.print("| "+getSqaure(i, j)+" ");
+    // output current chess board layout to stdout
+    public void printBoard() {
+        for ( int row = 0; row < BOARD_SIZE; row++ ) {
+            for ( int col = 0; col < BOARD_SIZE; col++ ) {
+                System.out.print(chessBoard[row][col]+" ");
             }
-            System.out.println("|");
-            System.out.println("---------------------------------");
+            System.out.println();
         }
     }
 }
