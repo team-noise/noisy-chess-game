@@ -41,18 +41,18 @@ public class Board {
     }
 
     public void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
-        final Position curerntPosition = new Position(fromRow, fromCol);
-        final Position destinaionPosition = new Position(toRow, toCol);
+        final Position current = new Position(fromRow, fromCol);
+        final Position destination = new Position(toRow, toCol);
 
         // 移動する駒のオブジェクトを所得
-        Piece piece = findPiece(curerntPosition);
+        Piece piece = findPiece(current);
         if ( piece == null ) {
-            System.out.println("[ERROR] not found piece");
+            System.out.println("[ERROR] not found piece to move");
             return;
         }
 
         // 駒の性質上、許容された動作かをチェック
-        boolean isValidMove = piece.isValidMove(destinaionPosition);
+        boolean isValidMove = piece.isValidMove(destination);
         if ( Boolean.FALSE.equals(isValidMove) ) {
             System.out.println("[ERROR] the piece("+chessBoard[fromRow][fromCol]+") is incapable of making that move");
             return;
@@ -61,26 +61,34 @@ public class Board {
         // 駒が移動先に移動可能かをチェック
         // 例）進路上に味方の駒がないかや
         // 例）敵の駒を倒せるか
-        boolean canMove = canMove(piece, destinaionPosition);
-        if ( Boolean.TRUE.equals(canMove) ) {
-            char pieceChar = chessBoard[fromRow][fromCol];
-            chessBoard[fromRow][fromCol] = EMPTY_CELL;
-            chessBoard[toRow][toCol] = pieceChar;
-            piece.setPosition(destinaionPosition);
-            piece.addCount();
+        boolean canMove = canMove(piece, destination);
+        if ( Boolean.FALSE.equals(canMove) ) {
+            System.out.println("[ERROR] the piece("+chessBoard[fromRow][fromCol]+") cannot move because ally piece(s) exists on the way");
+            return;
         }
+
+        // 駒の移動
+        Piece target = findPiece(destination);
+        if ( target == null ) {
+            piece.move(destination);
+        } else {
+            if ( !piece.killPiece(target) ) {
+                System.out.println("[ERROR] cannot kill destination piece");
+                return;        
+            }
+        }
+
+        // チェスボードの更新
+        char pieceChar = chessBoard[fromRow][fromCol];
+        chessBoard[fromRow][fromCol] = EMPTY_CELL;
+        chessBoard[toRow][toCol] = pieceChar;
     }
 
     private boolean canMove(Piece piece, Position destination) {
         if ( piece instanceof Pawn pawn) {
-            Piece enemyPiece = findPiece(destination);
-            if ( enemyPiece == null ) {
-                return !hasAllyPieceInDirection(pawn.getPosition(), destination);
-            } else if ( piece.isWhite() ^ enemyPiece.isWhite() ) {
-                return pawn.killPiece(destination);
-            } else {
-                return false;
-            }
+            Piece target = findPiece(destination);
+            if ( target == null ) return !hasAllyPieceInDirection(pawn.getPosition(), destination);
+            return !pawn.isAllyPiece(target);
         }
 
         return false;
@@ -92,6 +100,7 @@ public class Board {
 
     private Piece findPiece(Position position) {
         for (Piece piece : pieces) {
+            if ( !piece.isAlive() ) continue;
             if ( piece.getPosition().equals(position) ) return piece;
         }
         return null;
@@ -102,10 +111,8 @@ public class Board {
     }
 
     private boolean hasAllyPieceInDirection(Position current, Position destination) {
-        final int maxRow = (current.getRow() < destination.getRow()) ? destination.getRow() : current.getRow();
-        final int minRow = (current.getRow() < destination.getRow()) ? current.getRow() : destination.getRow();
-        final int maxCol = (current.getCol() < destination.getCol()) ? destination.getCol() : current.getCol();
-        final int minCol = (current.getCol() < destination.getCol()) ? current.getCol() : destination.getCol();
+        final boolean countupRow = current.getRow() <= destination.getRow();
+        final boolean countupCol = current.getCol() <= destination.getCol();
 
         final Piece piece = findPiece(current);
         if ( piece == null ) {
@@ -114,36 +121,49 @@ public class Board {
         }
 
         // straight
-        for ( int row = minRow; row <= maxRow; row++ ) {
-            if ( current.getRow() == row ) continue;
+        for ( int row = current.getRow(), col = current.getCol(); ;
+                row = countupRow ? row+1 : row-1 ) {
+            if ( countupRow && row > destination.getRow() ) break;
+            if ( !countupRow && row < destination.getRow() ) break;
 
-            Piece target = findPiece(row, current.getCol());
-            if ( target == null ) continue;
-            if ( piece.isWhite() && target.isWhite() ) return true;
+            // skip current position
+            if ( row == current.getRow() ) continue;
+
+            // check ally piece(s) on the way
+            Piece target = findPiece(row, col);
+            if ( piece.isAllyPiece(target) ) return true;
         }
         System.out.println("[INFO] PASS: checking ally pieces on straight direction");
         
         // horizontally
-        for ( int col = minCol; col <= maxCol; col++ ) {
-            if ( current.getCol() == col ) continue;
+        for ( int row = current.getRow(), col = current.getCol(); ;
+                col = countupCol ? col+1 : col-1 ) {
+            if ( countupCol && col > destination.getCol() ) break;
+            if ( !countupCol && col < destination.getCol() ) break;
 
-            Piece target = findPiece(current.getRow(), col);
-            if ( target == null ) continue;
-            if ( piece.isWhite() && target.isWhite() ) return true;
+            // skip current position
+            if ( col == current.getCol() ) continue;
+
+            // check ally piece(s) on the way
+            Piece target = findPiece(row, col);
+            if ( piece.isAllyPiece(target) ) return true;
         }
         System.out.println("[INFO] PASS: checking ally pieces on horizontally direction");
 
         // diagonally
-        final boolean countupCol = current.getRow() < destination.getRow() && current.getCol() < destination.getCol();
-        
-        for ( int row = minRow, col = countupCol ? minCol : maxCol;
-                row <= maxRow;
-                row++, col = countupCol ? col+1 : col-1) {
-            if ( current.getCol() == col ) continue;
+        for ( int row = current.getRow(), col = current.getCol(); ;
+                row = countupRow ? row+1 : row-1,
+                col = countupCol ? col+1 : col-1 ) {
+            // exit condition
+            if ( countupRow && row > destination.getRow() ) break;
+            if ( !countupRow && row < destination.getRow() ) break;
 
-            Piece target = findPiece(current.getRow(), col);
-            if ( target == null ) continue;
-            if ( piece.isWhite() && target.isWhite() ) return true;
+            // skip current position
+            if ( row == current.getRow() ) continue;
+
+            // check ally piece(s) on the way
+            Piece target = findPiece(row, col);
+            if ( piece.isAllyPiece(target) ) return true;
         }
         System.out.println("[INFO] PASS: checking ally pieces on diagonally direction");
 

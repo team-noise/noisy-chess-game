@@ -3,9 +3,8 @@ package com.example.pieces;
 import com.example.common.Position;
 
 public class Pawn extends Piece {
-    // constructor
-    public Pawn(final int line, final int row, final boolean isWhite) {
-        super(line, row, isWhite);
+    public Pawn(final int row, final int col, final boolean isWhite) {
+        super(row, col, isWhite);
     }
 
     @Override
@@ -27,32 +26,14 @@ public class Pawn extends Piece {
         return false;
     }
 
-    public boolean killPiece(Position position) {
-        if ( !moveForward(position) ) return false;
-
-        // Pawn cannot kill enemy pieces by moving straight
-        if ( moveStraight(position) ) return false;
-
-        // Pawn can kill enemy pieces by moving diagonally
-        return moveDiagonally(position);
-    }
-
-    private boolean moveForward(Position position) {
-        boolean moveUp;
-        if ( getPosition().getRow() > position.getRow() ) moveUp = true;
-        else moveUp = false;
-
-        return isWhite() ^ !moveUp;
+    public boolean moveStraight(Position position) {
+        int distanceCol = Math.abs( getPosition().getCol() - position.getCol() );
+        return distanceCol == 0;
     }
 
     private boolean moveDiagonally(Position position) {
         int distanceRow = Math.abs( getPosition().getRow() - position.getRow() );
         int distanceCol = Math.abs( getPosition().getCol() - position.getCol() );
         return distanceRow == 1 && distanceCol == 1;
-    }
-
-    public boolean moveStraight(Position position) {
-        int distanceCol = Math.abs( getPosition().getCol() - position.getCol() );
-        return distanceCol == 0;
     }
 }
