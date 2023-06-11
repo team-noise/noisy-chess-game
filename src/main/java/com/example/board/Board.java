@@ -63,7 +63,9 @@ public class Board {
         // 例）敵の駒を倒せるか
         boolean canMove = canMove(piece, destination);
         if ( Boolean.FALSE.equals(canMove) ) {
-            System.out.println("[ERROR] the piece("+chessBoard[fromRow][fromCol]+") cannot move because ally piece(s) exists on the way");
+            System.out.println("[ERROR] the piece("+chessBoard[fromRow][fromCol]+") cannot move because one of the following reason");
+            System.out.println("[ERROR]   1. ally piece(s) exists on the way");
+            System.out.println("[ERROR]   2. no ememies to 1 square diagonally (only Pawn)");
             return;
         }
 
@@ -87,8 +89,10 @@ public class Board {
     private boolean canMove(Piece piece, Position destination) {
         if ( piece instanceof Pawn pawn) {
             Piece target = findPiece(destination);
-            if ( target == null ) return !hasAllyPieceInDirection(pawn.getPosition(), destination);
-            return !pawn.isAllyPiece(target);
+            if ( target == null ) {
+                return pawn.moveStraight(destination) && !hasAllyPieceInDirection(pawn.getPosition(), destination);
+            }
+            return pawn.moveDiagonally(destination) && !pawn.isAllyPiece(target);
         }
 
         return false;

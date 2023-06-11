@@ -31,7 +31,7 @@ public class Pawn extends Piece {
         return distanceCol == 0;
     }
 
-    private boolean moveDiagonally(Position position) {
+    public boolean moveDiagonally(Position position) {
         int distanceRow = Math.abs( getPosition().getRow() - position.getRow() );
         int distanceCol = Math.abs( getPosition().getCol() - position.getCol() );
         return distanceRow == 1 && distanceCol == 1;
