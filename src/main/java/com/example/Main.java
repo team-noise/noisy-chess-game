@@ -11,7 +11,6 @@ public class Main {
         System.out.println("====Start==== Above:BLACK Below:WHITE");
         board.printBoard();
 
-        // play this game
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -26,15 +25,24 @@ public class Main {
             board.movePiece(fromRow, fromCol, toRow, toCol);
 
             board.printBoard();
-
-            System.out.println("Do you want to continue playing? (y/n)");
-            String exit = scanner.next();
-
-            if (exit.equalsIgnoreCase("n")) {
-                break;
-            }
+            if (! checkContinue(scanner) ) break;
         }
 
         scanner.close();
+    }
+
+    private static boolean checkContinue(Scanner scanner) {
+        while (true) {
+            System.out.println("Do you want to continue playing? (y/n)");
+            String exit = scanner.next();
+
+            if (exit.equalsIgnoreCase("y")) {
+                return true;
+            } else if (exit.equalsIgnoreCase("n")) {
+                return false;
+            } else {
+                System.out.println("Please input the correct value (y/n)");
+            }
+        }
     }
 }
