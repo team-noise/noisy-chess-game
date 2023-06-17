@@ -1,5 +1,5 @@
 <p align="center">
-    <img alt="Grype logo" src="images/log.png" width="234">
+    <img alt="Grype logo" src="images/noisychess_logo.png" width="234">
 </p>
 
 # noisy-chess-game
