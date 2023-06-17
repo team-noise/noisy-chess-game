@@ -30,11 +30,11 @@ public class PawnTest {
 
     @Test
     public void testIsValidMoveVertical() {
-        testIsValidMove4BlackPiece2Vertical();
-        testIsValidMove4WhitePiece2Vertical();
+        testIsValidMoveVertical4Black();
+        testIsValidMoveVertical4White();
     }
 
-    private void testIsValidMove4BlackPiece2Vertical() {
+    private void testIsValidMoveVertical4Black() {
         /* This test case checks move to vertical */
         /* BLACK PIECE */
         Pawn pawnBlack = new Pawn(1, 4, false);
@@ -97,7 +97,7 @@ public class PawnTest {
         position.setRow(0);
         Assert.assertFalse(pawnBlack.isValidMove(position));
     }
-    private void testIsValidMove4WhitePiece2Vertical() {
+    private void testIsValidMoveVertical4White() {
         /* This test case checks move to vertical */
         /* BLACK PIECE */
         Pawn pawnWhite = new Pawn(6, 4, true);
@@ -162,7 +162,7 @@ public class PawnTest {
     }
 
     @Test
-    public void testIsValidMove4Horizontally() {
+    public void testIsValidMoveHorizontally() {
         /* This test case checks move to horizontally */
         // Both pieces of Black and White has same condition (rules)
         //  - cannot accept horizontally movement
@@ -188,7 +188,7 @@ public class PawnTest {
     }
 
     @Test
-    public void testIsValidMove4Diagonally() {
+    public void testIsValidMoveDiagonally() {
         /* This test case checks move to horizontally */
 
         /* BLACK PIECE */
