@@ -28,12 +28,17 @@ public class KingTest {
         Assert.assertTrue(king.isValidMove(position));
 
         // 1 square movement to diagonary (first time)
-        position = new Position(1, 5);
+        position = new Position(1, 4);
         Assert.assertTrue(king.isValidMove(position));
 
         // 2 squares movement to horizontally (first time)
-        position = new Position(0, 6);
+        position = new Position(0, 7);
         Assert.assertFalse(king.isValidMove(position));
-   }
+
+        // 3 squares movement to horizontally (first time)
+        position = new Position(3, 7);
+        Assert.assertFalse(king.isValidMove(position));
+
+
 
 }
