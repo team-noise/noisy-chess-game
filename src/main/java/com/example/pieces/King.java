@@ -9,7 +9,15 @@ public class King extends Piece {
 
     @Override
     public boolean isValidMove(Position position) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isValidMove'");
+        // Calculate the absolute difference in rows and columns
+        int rowDiff = Math.abs(position.getRow() - getPosition().getRow());
+        int colDiff = Math.abs(position.getCol() - getPosition().getCol());
+
+        //The target position is within one square in any direction
+        if(rowDiff <= 1 && colDiff <= 1){
+            return true;
+        }
+
+        return false;
     }
 }

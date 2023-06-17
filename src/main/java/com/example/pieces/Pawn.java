@@ -17,7 +17,7 @@ public class Pawn extends Piece {
 
         // condition 3: the following straight movements are allowed
         //              - 1 square movement (always)
-        //              - 2 square movement on the first time
+        //              - 2 squares movement on the first time
         if ( !moveStraight(position) ) return false;
         int distanceRow = Math.abs( getPosition().getRow() - position.getRow() );
         if ( distanceRow == 1 ) return true;

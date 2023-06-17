@@ -21,4 +21,6 @@ public class Rook extends Piece {
         return getPosition().getRow() != position.getRow() && getPosition().getCol() == position.getCol();
     }
 
+
+
 }
