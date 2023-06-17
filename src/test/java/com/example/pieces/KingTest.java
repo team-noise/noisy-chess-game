@@ -38,7 +38,5 @@ public class KingTest {
         // 3 squares movement to horizontally (first time)
         position = new Position(3, 7);
         Assert.assertFalse(king.isValidMove(position));
-
-
-
+    }
 }
