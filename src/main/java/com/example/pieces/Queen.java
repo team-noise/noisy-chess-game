@@ -9,7 +9,23 @@ public class Queen extends Piece {
 
     @Override
     public boolean isValidMove(Position position) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isValidMove'");
+        return moveStraight(position) || moveDiagonally(position) || moveDiagonally(position);
+    }
+
+
+    public boolean moveStraight(Position position) {
+        return getPosition().getRow() == position.getRow() && getPosition().getCol() != position.getCol();
+    }
+
+    public boolean moveHorizontally(Position position) {
+        return getPosition().getRow() != position.getRow() && getPosition().getCol() == position.getCol();
+    }
+
+    public boolean moveDiagonally(Position position) {
+        int rowDistance = Math.abs( getPosition().getRow() - position.getRow() );
+        int colDistance = Math.abs( getPosition().getCol() - position.getCol() );
+
+        if ( rowDistance == 0 || colDistance == 0 ) return false;
+        return rowDistance == colDistance;
     }
 }
