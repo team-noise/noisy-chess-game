@@ -14,7 +14,7 @@ public class King extends Piece {
         int colDiff = Math.abs(position.getCol() - getPosition().getCol());
 
         //The target position is within one square in any direction
-        if(rowDiff <= 1 && colDiff <= 1){
+        if(rowDiff >= 0 && colDiff >= 0 && rowDiff <= 1 && colDiff <= 1 && rowDiff + colDiff > 0){
             return true;
         }
 
