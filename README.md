@@ -1,3 +1,7 @@
+<p align="center">
+    <img alt="Grype logo" src="images/log.png" width="234">
+</p>
+
 # noisy-chess-game
 Team NOISEでオリジナルのチェスゲームを作成するためのリポジトリ   
 
