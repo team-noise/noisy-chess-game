@@ -9,7 +9,14 @@ public class Bishop extends Piece {
 
     @Override
     public boolean isValidMove(Position position) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isValidMove'");
+        return moveDiagonally(position);
+    }
+
+    public boolean moveDiagonally(Position position) {
+        int rowDistance = Math.abs( getPosition().getRow() - position.getRow() );
+        int colDistance = Math.abs( getPosition().getCol() - position.getCol() );
+
+        if ( rowDistance == 0 || colDistance == 0 ) return false;
+        return rowDistance == colDistance;
     }
 }

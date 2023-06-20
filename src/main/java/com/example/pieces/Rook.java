@@ -20,7 +20,4 @@ public class Rook extends Piece {
     public boolean moveHorizontally(Position position) {
         return getPosition().getRow() != position.getRow() && getPosition().getCol() == position.getCol();
     }
-
-
-
 }
