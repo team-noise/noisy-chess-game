@@ -9,6 +9,9 @@ public class Rook extends Piece {
 
     @Override
     public boolean isValidMove(Position position) {
+        // validate row and col values of destination position
+        if ( ! validatePosition(position) ) return false;
+
         // condition: only move straight or horizontally
         return moveStraight(position) || moveHorizontally(position);
     }

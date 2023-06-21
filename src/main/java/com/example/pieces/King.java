@@ -9,6 +9,9 @@ public class King extends Piece {
 
     @Override
     public boolean isValidMove(Position position) {
+        // validate row and col values of destination position
+        if ( ! validatePosition(position) ) return false;
+
         // Calculate the absolute difference in rows and columns
         int rowDiff = Math.abs(position.getRow() - getPosition().getRow());
         int colDiff = Math.abs(position.getCol() - getPosition().getCol());

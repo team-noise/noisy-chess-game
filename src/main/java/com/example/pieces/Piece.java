@@ -3,11 +3,13 @@ package com.example.pieces;
 import com.example.common.Position;
 
 public abstract class Piece {
+    protected static final int BOARD_SIZE = 8;
     private Position position;      // position info on chess board
     private final boolean isWhite;
     private boolean isAlive;
     private int count;              // the number of moving on chess board
 
+    // constructor
     protected Piece(final int row, final int col, final boolean isWhite) {
         this.position = new Position(row, col);
         this.isWhite = isWhite;
@@ -15,43 +17,23 @@ public abstract class Piece {
         this.count = 0;
     }
 
-    public boolean isWhite() {
-        return this.isWhite;
-    }
-
-    public boolean isBlack() {
-        return !this.isWhite;
-    }
-
-    public boolean isAlive() {
-        return this.isAlive;
-    }
-
-    public Position getPosition() {
-        return position;
-    }
-
-    public int getCount() {
-        return count;
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
-    public void isDead() {
-        this.position = null;
-        this.isAlive = false;
-    }
-
-    protected void addCount() {
-        this.count++;
+    // methods
+    protected boolean validatePosition(Position position) {
+        // The values of the coordinates are limited to the range of 0 to BOARD_SIZE-1.
+        if ( position.getRow() < 0 || position.getRow() > BOARD_SIZE-1 ) return false;
+        else if ( position.getCol() < 0 || position.getCol() > BOARD_SIZE-1 ) return false;
+        return true;
     }
 
     public abstract boolean isValidMove(Position position);
+
     public void move(Position position) {
-        setPosition(position);
-        addCount();
+        if ( validatePosition(position) ) {
+            setPosition(position);
+            addCount();
+        } else {
+            System.out.println("[WARN] cannot move because position value is invalid");
+        }
     }
 
     public boolean killPiece(Piece piece) {
@@ -83,5 +65,39 @@ public abstract class Piece {
         else moveUp = false;
 
         return (isWhite() ^ !moveUp);
+    }
+
+    // following methods are getter and setter
+    public boolean isWhite() {
+        return this.isWhite;
+    }
+
+    public boolean isBlack() {
+        return !this.isWhite;
+    }
+
+    public boolean isAlive() {
+        return this.isAlive;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public void isDead() {
+        this.position = null;
+        this.isAlive = false;
+    }
+
+    protected void addCount() {
+        this.count++;
     }
 }

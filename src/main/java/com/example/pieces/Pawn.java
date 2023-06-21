@@ -9,6 +9,9 @@ public class Pawn extends Piece {
 
     @Override
     public boolean isValidMove(Position position) {
+        // validate row and col values of destination position
+        if ( ! validatePosition(position) ) return false;
+
         // condition 1: forward movement only allowed
         if ( !moveForward(position) ) return false;
         
