@@ -29,7 +29,7 @@ public class Board {
             }
         }
 
-        // deploy Pawn peices
+        // deploy Pawns
         for ( int col = 0; col < BOARD_SIZE; col++ ) {
             chessBoard[1][col] = 'P';
             pieces.add(new Pawn(1, col, false));
@@ -37,7 +37,47 @@ public class Board {
             pieces.add(new Pawn((BOARD_SIZE-1)-1, col, true));
         }
 
-        // deploy King peices
+        // deploy Rooks
+        chessBoard[0][0] = 'R';
+        chessBoard[0][7] = 'R';
+        pieces.add(new Rook(0, 0, false));
+        pieces.add(new Rook(0, 7, false));
+        chessBoard[7][0] = 'R';
+        chessBoard[7][7] = 'R';
+        pieces.add(new Rook(7, 0, true));
+        pieces.add(new Rook(7, 7, true));
+
+        // deploy Knights
+        chessBoard[0][1] = 'K';
+        chessBoard[0][6] = 'K';
+        pieces.add(new Knight(0, 1, false));
+        pieces.add(new Knight(0, 6, false));
+        chessBoard[7][1] = 'K';
+        chessBoard[7][6] = 'K';
+        pieces.add(new Knight(7, 1, true));
+        pieces.add(new Knight(7, 6, true));
+
+        // deploy Bishops
+        chessBoard[0][2] = 'B';
+        chessBoard[0][5] = 'B';
+        pieces.add(new Bishop(0, 2, false));
+        pieces.add(new Bishop(0, 5, false));
+        chessBoard[7][2] = 'B';
+        chessBoard[7][5] = 'B';
+        pieces.add(new Bishop(7, 2, true));
+        pieces.add(new Bishop(7, 5, true));
+
+        // deploy Kings
+        chessBoard[0][3] = '$';
+        pieces.add(new King(0, 3, false));
+        chessBoard[7][3] = '$';
+        pieces.add(new King(7, 3, true));
+
+        // deploy Queens
+        chessBoard[0][4] = 'Q';
+        pieces.add(new Queen(0, 4, false));
+        chessBoard[7][4] = 'Q';
+        pieces.add(new Queen(7, 4, true));
     }
 
     public void movePiece(int fromRow, int fromCol, int toRow, int toCol) {
