@@ -1,5 +1,8 @@
 package com.example.pieces;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.example.common.Position;
 
 public abstract class Piece {
@@ -8,6 +11,8 @@ public abstract class Piece {
     private final boolean isWhite;
     private boolean isAlive;
     private int count;              // the number of moving on chess board
+
+    private static final Logger logger = LogManager.getLogger("PieceLogger");
 
     // constructor
     protected Piece(final int row, final int col, final boolean isWhite) {
@@ -32,14 +37,14 @@ public abstract class Piece {
             setPosition(position);
             addCount();
         } else {
-            System.out.println("[WARN] cannot move because position value is invalid");
+            logger.warn("cannot move because position value is invalid");
         }
     }
 
     public boolean killPiece(Piece piece) {
         if ( isAllyPiece(piece) ) return false;
 
-        System.out.printf("[INFO] Piece(%d, %d) kills a Piece(%d, %d)", getPosition().getRow(), getPosition().getCol(), piece.getPosition().getRow(), piece.getPosition().getCol());
+        logger.info("Piece(%d, %d) kills a Piece(%d, %d)", getPosition().getRow(), getPosition().getCol(), piece.getPosition().getRow(), piece.getPosition().getCol());
         move(piece.getPosition());
         piece.isDead();
 
@@ -49,11 +54,11 @@ public abstract class Piece {
     public boolean isAllyPiece(Piece piece) {
         if ( piece == null ) return false;
         if ( isWhite() && piece.isWhite() ) {
-            System.out.println("[DEBUG] both pieces are white");
+            logger.debug("both pieces are white");
             return true;
         }
         if ( isBlack() && piece.isBlack() ) {
-            System.out.println("[DEBUG] both pieces are black");
+            logger.debug("both pieces are black");
             return true;
         }
         return false;

@@ -3,6 +3,9 @@ package com.example.board;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.example.common.*;
 import com.example.pieces.*;
 
@@ -10,6 +13,7 @@ import com.example.pieces.*;
 public class Board {
     public static final int BOARD_SIZE = 8;
     private static final char EMPTY_CELL = '-';
+    private static final Logger logger = LogManager.getLogger("BoardLogger");
 
     private char[][] chessBoard;
     private ArrayList<Piece> pieces;
@@ -87,14 +91,14 @@ public class Board {
         // 移動する駒のオブジェクトを所得
         Piece piece = findPiece(current);
         if ( piece == null ) {
-            System.out.println("[ERROR] not found piece to move");
+            logger.error("not found piece to move");
             return;
         }
 
         // 駒の性質上、許容された動作かをチェック
         boolean isValidMove = piece.isValidMove(destination);
         if ( Boolean.FALSE.equals(isValidMove) ) {
-            System.out.println("[ERROR] the piece("+chessBoard[fromRow][fromCol]+") is incapable of making that move");
+            logger.error("the piece("+chessBoard[fromRow][fromCol]+") is incapable of making that move");
             return;
         }
 
@@ -103,9 +107,9 @@ public class Board {
         // 例）敵の駒を倒せるか
         boolean canMove = canMove(piece, destination);
         if ( Boolean.FALSE.equals(canMove) ) {
-            System.out.println("[ERROR] the piece("+chessBoard[fromRow][fromCol]+") cannot move because one of the following reason");
-            System.out.println("[ERROR]   1. ally piece(s) exists on the way");
-            System.out.println("[ERROR]   2. no ememies to 1 square diagonally (only Pawn)");
+            logger.error("the piece("+chessBoard[fromRow][fromCol]+") cannot move because one of the following reason");
+            logger.error("   1. ally piece(s) exists on the way");
+            logger.error("   2. no ememies to 1 square diagonally (only Pawn)");
             return;
         }
 
@@ -115,7 +119,7 @@ public class Board {
             piece.move(destination);
         } else {
             if ( !piece.killPiece(target) ) {
-                System.out.println("[ERROR] cannot kill destination piece");
+                logger.error("cannot kill destination piece");
                 return;        
             }
         }
@@ -160,7 +164,7 @@ public class Board {
 
         final Piece piece = findPiece(current);
         if ( piece == null ) {
-            System.out.println("[ERROR] unexpected result: connot find piece to move");
+            logger.error("unexpected result: connot find piece to move");
             System.exit(1);
         }
 
@@ -177,7 +181,7 @@ public class Board {
             Piece target = findPiece(row, col);
             if ( piece.isAllyPiece(target) ) return true;
         }
-        System.out.println("[INFO] PASS: checking ally pieces on straight direction");
+        logger.debug("PASS: checking ally pieces on straight direction");
         
         // horizontally
         for ( int row = current.getRow(), col = current.getCol(); ;
@@ -192,7 +196,7 @@ public class Board {
             Piece target = findPiece(row, col);
             if ( piece.isAllyPiece(target) ) return true;
         }
-        System.out.println("[INFO] PASS: checking ally pieces on horizontally direction");
+        logger.debug("PASS: checking ally pieces on horizontally direction");
 
         // diagonally
         for ( int row = current.getRow(), col = current.getCol(); ;
@@ -209,7 +213,7 @@ public class Board {
             Piece target = findPiece(row, col);
             if ( piece.isAllyPiece(target) ) return true;
         }
-        System.out.println("[INFO] PASS: checking ally pieces on diagonally direction");
+        logger.debug("PASS: checking ally pieces on diagonally direction");
 
         return false;
     }
