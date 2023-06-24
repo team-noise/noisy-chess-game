@@ -12,7 +12,7 @@ public class Queen extends Piece {
         // validate row and col values of destination position
         if ( ! validatePosition(position) ) return false;
 
-        return moveStraight(position) || moveDiagonally(position) || moveDiagonally(position);
+        return moveStraight(position) || moveHorizontally(position) || moveDiagonally(position);
     }
 
 

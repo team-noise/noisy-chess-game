@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import com.example.common.Position;
 
-public class Rooktest {
+public class RookTest {
     @Test
     public void testCreationInstance() {
         Rook rook = new Rook(0, 0, true);
@@ -95,18 +95,5 @@ public class Rooktest {
 
         Position validPosition14 = new Position(2, 3);
         Assert.assertTrue(rook.isValidMove(validPosition14));
-
-        // Test invalid moves outside one square range
-        Position invalidPosition10 = new Position(3, 7);
-        Assert.assertFalse(rook.isValidMove(invalidPosition10));
-
-        Position invalidPosition11 = new Position(7, 3);
-        Assert.assertFalse(rook.isValidMove(invalidPosition11));
-
-        Position invalidPosition12 = new Position(3, 0);
-        Assert.assertFalse(rook.isValidMove(invalidPosition12));
-
-        Position invalidPosition13 = new Position(0, 3);
-        Assert.assertFalse(rook.isValidMove(invalidPosition13));
     }
 }
