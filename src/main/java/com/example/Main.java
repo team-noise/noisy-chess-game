@@ -9,7 +9,7 @@ public class Main {
         Board board = new Board();
 
         System.out.println("====Start==== Above:BLACK Below:WHITE");
-        board.printBoard();
+        printBoard(board.getChessBoard());
 
         Scanner scanner = new Scanner(System.in);
 
@@ -24,7 +24,7 @@ public class Main {
 
             board.movePiece(fromRow, fromCol, toRow, toCol);
 
-            board.printBoard();
+            printBoard(board.getChessBoard());
             if (! checkContinue(scanner) ) break;
         }
 
@@ -45,4 +45,15 @@ public class Main {
             }
         }
     }
+
+    // output current chess board layout to stdout
+    private static void printBoard(char[][] board) {
+        for ( int row = 0; row < board.length; row++ ) {
+            for ( int col = 0; col < board[row].length; col++ ) {
+                System.out.print(board[row][col]+" ");
+            }
+            System.out.println();
+        }
+    }
+
 }

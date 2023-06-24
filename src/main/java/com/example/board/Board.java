@@ -96,18 +96,16 @@ public class Board {
         }
 
         // 駒の性質上、許容された動作かをチェック
-        boolean isValidMove = piece.isValidMove(destination);
-        if ( Boolean.FALSE.equals(isValidMove) ) {
-            logger.error("the piece("+chessBoard[fromRow][fromCol]+") is incapable of making that move");
+        if ( Boolean.FALSE.equals( piece.isValidMove(destination) ) ) {
+            logger.error("the piece({}) is incapable of making that move", chessBoard[fromRow][fromCol]);
             return;
         }
 
         // 駒が移動先に移動可能かをチェック
-        // 例）進路上に味方の駒がないかや
+        // 例）進路途中に駒がないかや
         // 例）敵の駒を倒せるか
-        boolean canMove = canMove(piece, destination);
-        if ( Boolean.FALSE.equals(canMove) ) {
-            logger.error("the piece("+chessBoard[fromRow][fromCol]+") cannot move because one of the following reason");
+        if ( Boolean.FALSE.equals( canMove(piece, destination) ) ) {
+            logger.error("the piece({}) cannot move because one of the following reason", chessBoard[fromRow][fromCol]);
             logger.error("   1. ally piece(s) exists on the way");
             logger.error("   2. no ememies to 1 square diagonally (only Pawn)");
             return;
@@ -131,19 +129,30 @@ public class Board {
     }
 
     private boolean canMove(Piece piece, Position destination) {
+        Piece target = findPiece(destination);
+
         if ( piece instanceof Pawn pawn) {
-            Piece target = findPiece(destination);
-            if ( target == null ) {
-                return pawn.moveStraight(destination) && !hasAllyPieceInDirection(pawn.getPosition(), destination);
-            }
-            return pawn.moveDiagonally(destination) && !pawn.isAllyPiece(target);
+            if ( existsPieceInDirection(pawn.getPosition(), destination) ) return false;
+            if ( target == null ) return pawn.moveStraight(destination);
+            return pawn.moveDiagonally(destination);
+        } else if ( piece instanceof Rook rook ) {
+            if ( existsPieceInDirection(rook.getPosition(), destination) ) return false;
+            return !rook.isAllyPiece(target);
+        } else if ( piece instanceof Knight knight) {
+            return !knight.isAllyPiece(target);
+        } else if ( piece instanceof Bishop bishop) {
+            if ( existsPieceInDirection(bishop.getPosition(), destination) ) return false;
+            return !bishop.isAllyPiece(target);
+        } else if ( piece instanceof Queen queen) {
+            if ( existsPieceInDirection(queen.getPosition(), destination) ) return false;
+            return !queen.isAllyPiece(target);
+        } else if ( piece instanceof King king) {
+            if ( existsPieceInDirection(king.getPosition(), destination) ) return false;
+            return !king.isAllyPiece(target);
         }
 
+        logger.error("unexpected object as Piece");
         return false;
-    }
-
-    public List<Piece> getPieces() {
-        return pieces;
     }
 
     private Piece findPiece(Position position) {
@@ -158,7 +167,7 @@ public class Board {
         return findPiece(position);
     }
 
-    private boolean hasAllyPieceInDirection(Position current, Position destination) {
+    private boolean existsPieceInDirection(Position current, Position destination) {
         final boolean countupRow = current.getRow() <= destination.getRow();
         final boolean countupCol = current.getCol() <= destination.getCol();
 
@@ -171,30 +180,28 @@ public class Board {
         // straight
         for ( int row = current.getRow(), col = current.getCol(); ;
                 row = countupRow ? row+1 : row-1 ) {
-            if ( countupRow && row > destination.getRow() ) break;
-            if ( !countupRow && row < destination.getRow() ) break;
+            if ( countupRow && row >= destination.getRow() ) break;
+            if ( !countupRow && row <= destination.getRow() ) break;
 
             // skip current position
             if ( row == current.getRow() ) continue;
 
-            // check ally piece(s) on the way
-            Piece target = findPiece(row, col);
-            if ( piece.isAllyPiece(target) ) return true;
+            // check whether piece(s) exist on the way
+            if ( findPiece(row, col) != null ) return true;
         }
         logger.debug("PASS: checking ally pieces on straight direction");
         
         // horizontally
         for ( int row = current.getRow(), col = current.getCol(); ;
                 col = countupCol ? col+1 : col-1 ) {
-            if ( countupCol && col > destination.getCol() ) break;
-            if ( !countupCol && col < destination.getCol() ) break;
+            if ( countupCol && col >= destination.getCol() ) break;
+            if ( !countupCol && col <= destination.getCol() ) break;
 
             // skip current position
             if ( col == current.getCol() ) continue;
 
-            // check ally piece(s) on the way
-            Piece target = findPiece(row, col);
-            if ( piece.isAllyPiece(target) ) return true;
+            // check whether piece(s) exist on the way
+            if ( findPiece(row, col) != null ) return true;
         }
         logger.debug("PASS: checking ally pieces on horizontally direction");
 
@@ -203,28 +210,26 @@ public class Board {
                 row = countupRow ? row+1 : row-1,
                 col = countupCol ? col+1 : col-1 ) {
             // exit condition
-            if ( countupRow && row > destination.getRow() ) break;
-            if ( !countupRow && row < destination.getRow() ) break;
+            if ( countupRow && row >= destination.getRow() ) break;
+            if ( !countupRow && row <= destination.getRow() ) break;
 
             // skip current position
             if ( row == current.getRow() ) continue;
 
-            // check ally piece(s) on the way
-            Piece target = findPiece(row, col);
-            if ( piece.isAllyPiece(target) ) return true;
+            // check whether piece(s) exist on the way
+            if ( findPiece(row, col) != null ) return true;
         }
         logger.debug("PASS: checking ally pieces on diagonally direction");
 
         return false;
     }
 
-    // output current chess board layout to stdout
-    public void printBoard() {
-        for ( int row = 0; row < BOARD_SIZE; row++ ) {
-            for ( int col = 0; col < BOARD_SIZE; col++ ) {
-                System.out.print(chessBoard[row][col]+" ");
-            }
-            System.out.println();
-        }
+    // getter and setter
+    public List<Piece> getPieces() {
+        return pieces;
+    }
+
+    public char[][] getChessBoard() {
+        return chessBoard;
     }
 }
