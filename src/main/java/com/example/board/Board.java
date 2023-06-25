@@ -107,7 +107,7 @@ public class Board {
         if ( Boolean.FALSE.equals( canMove(piece, destination) ) ) {
             logger.error("the piece({}) cannot move because one of the following reason", chessBoard[fromRow][fromCol]);
             logger.error("   1. ally piece(s) exists on the way");
-            logger.error("   2. no ememies to 1 square diagonally (only Pawn)");
+            logger.error("   2. no enemies to 1 square diagonally (only Pawn)");
             return;
         }
 
