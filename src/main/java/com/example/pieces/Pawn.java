@@ -39,4 +39,12 @@ public class Pawn extends Piece {
         int distanceCol = Math.abs( getPosition().getCol() - position.getCol() );
         return distanceRow == 1 && distanceCol == 1;
     }
+
+    public boolean promotion() {
+        if ( isWhite() ) {
+            return getPosition().getRow() == 0;
+        } else {
+            return getPosition().getRow() == BOARD_SIZE-1 ;
+        }
+    }
 }

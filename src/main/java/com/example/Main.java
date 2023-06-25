@@ -23,6 +23,10 @@ public class Main {
             int toCol = scanner.nextInt();
 
             board.movePiece(fromRow, fromCol, toRow, toCol);
+            if ( board.pawnPromotion(toRow, toCol) ) {
+                String simbol = checkPawnPromotion(scanner);
+                board.pawnPromoteTo(toRow, toCol, simbol);
+            }
 
             printBoard(board.getChessBoard());
             if (! checkContinue(scanner) ) break;
@@ -31,6 +35,7 @@ public class Main {
         scanner.close();
     }
 
+    // prompt the input interactively until the correct input is obtained
     private static boolean checkContinue(Scanner scanner) {
         while (true) {
             System.out.println("Do you want to continue playing? (y/n)");
@@ -42,6 +47,30 @@ public class Main {
                 return false;
             } else {
                 System.out.println("Please input the correct value (y/n)");
+            }
+        }
+    }
+
+    // prompt the input interactively until the correct input is obtained
+    private static String checkPawnPromotion(Scanner scanner) {
+        while (true) {
+            System.out.println("q: Queen");
+            System.out.println("k: Knight");
+            System.out.println("b: Bishop");
+            System.out.println("r: Rook");
+            System.out.print("Which the piece which pawn promote to (e.g. k): ");
+            String simbol = scanner.next();
+
+            if (simbol.equalsIgnoreCase("q")) {
+                return simbol;
+            } else if (simbol.equalsIgnoreCase("k")) {
+                return simbol;
+            } else if (simbol.equalsIgnoreCase("b")) {
+                return simbol;
+            } else if (simbol.equalsIgnoreCase("r")) {
+                return simbol;
+            } else {
+                System.out.println("Please input the correct piece (y/n)");
             }
         }
     }

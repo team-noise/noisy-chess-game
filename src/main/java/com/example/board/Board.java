@@ -224,6 +224,35 @@ public class Board {
         return false;
     }
 
+    public boolean pawnPromotion(int row, int col) {
+        Piece piece = findPiece(row, col);
+        // check pawn's promotion
+        if ( piece instanceof Pawn pawn ) {
+            return pawn.promotion();
+        }
+        return false;
+    }
+
+    public void pawnPromoteTo(int row, int col, String pieceSimbol) {
+        Piece piece = findPiece(row, col);
+        boolean isWhite = piece.isWhite();
+
+        // pawn promote to other piece
+        if (pieceSimbol.equalsIgnoreCase("q")) pieces.add(new Queen(row, col, isWhite));
+        else if (pieceSimbol.equalsIgnoreCase("k")) pieces.add(new Knight(row, col, isWhite));
+        else if (pieceSimbol.equalsIgnoreCase("b")) pieces.add(new Bishop(row, col, isWhite));
+        else if (pieceSimbol.equalsIgnoreCase("r")) pieces.add(new Rook(row, col, isWhite));
+        else {
+            logger.error("unexpected piece simbol");
+            return;
+        }
+        
+        piece.isDead();
+
+        // update chess board
+        chessBoard[row][col] = pieceSimbol.toUpperCase().charAt(0);
+    }
+
     // getter and setter
     public List<Piece> getPieces() {
         return pieces;
